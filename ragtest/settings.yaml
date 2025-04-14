@@ -4,9 +4,9 @@ skip_workflows: []
 llm:
   api_key: ${GRAPHRAG_API_KEY}
   type: openai_chat # or azure_openai_chat
-  model: gpt-4o
+  model: gpt-4o-2024-08-06
   model_supports_json: true # recommended if this is available for your model.
-  # max_tokens: 4000
+  max_tokens: 4000
   # request_timeout: 180.0
   # api_base: https://<instance>.openai.azure.com
   # api_version: 2024-02-15-preview
@@ -26,16 +26,16 @@ parallelization:
   stagger: 0.3
   # num_threads: 50 # the number of threads to use for parallel processing
 
-async_mode: threaded # or asyncio
+async_mode: asyncio # threaded or asyncio
 
 embeddings:
   ## parallelization: override the global parallelization settings for embeddings
-  async_mode: threaded # or asyncio
+  async_mode: asyncio # threaded or asyncio
   # target: required # or all
   llm:
     api_key: ${GRAPHRAG_API_KEY}
     type: openai_embedding # or azure_openai_embedding
-    model: text-embedding-3-small
+    model: text-embedding-3-large
     # api_base: https://<instance>.openai.azure.com
     # api_version: 2024-02-15-preview
     # organization: <organization_id>
@@ -53,9 +53,9 @@ embeddings:
 
 
 chunks:
-  size: 300
+  size: 200
   overlap: 100
-  group_by_columns: [id] # by default, we don't allow chunks to cross documents
+  group_by_columns: [id, title] # by default, we don't allow chunks to cross documents
     
 input:
   type: file # or blob
@@ -137,12 +137,12 @@ local_search:
   # text_unit_prop: 0.5
   # community_prop: 0.1
   # conversation_history_max_turns: 5
-  # top_k_mapped_entities: 10
-  # top_k_relationships: 10
+  top_k_mapped_entities: 10
+  top_k_relationships: 10
   # llm_temperature: 0 # temperature for sampling
   # llm_top_p: 1 # top-p sampling
   # llm_n: 1 # Number of completions to generate
-  # max_tokens: 12000
+  max_tokens: 64000
 
 global_search:
   # llm_temperature: 0 # temperature for sampling

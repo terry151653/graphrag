@@ -1,121 +1,136 @@
 
 -Goal-
-Given a text document that is potentially relevant to this activity and a list of entity types, identify all entities of those types from the text and all relationships among the identified entities.
- 
+Given a text document that is potentially relevant to this activity, first identify all entities needed from the text in order to capture the information and ideas in the text.
+Next, report all relationships among the identified entities.
+
 -Steps-
 1. Identify all entities. For each identified entity, extract the following information:
 - entity_name: Name of the entity, capitalized
-- entity_type: One of the following types: [{entity_types}]
+- entity_type: Suggest several labels or categories for the entity. The categories should not be specific, but should be as general as possible.
 - entity_description: Comprehensive description of the entity's attributes and activities
 Format each entity as ("entity"{tuple_delimiter}<entity_name>{tuple_delimiter}<entity_type>{tuple_delimiter}<entity_description>)
- 
+
 2. From the entities identified in step 1, identify all pairs of (source_entity, target_entity) that are *clearly related* to each other.
 For each pair of related entities, extract the following information:
 - source_entity: name of the source entity, as identified in step 1
 - target_entity: name of the target entity, as identified in step 1
 - relationship_description: explanation as to why you think the source entity and the target entity are related to each other
 - relationship_strength: a numeric score indicating strength of the relationship between the source entity and target entity
- Format each relationship as ("relationship"{tuple_delimiter}<source_entity>{tuple_delimiter}<target_entity>{tuple_delimiter}<relationship_description>{tuple_delimiter}<relationship_strength>)
- 
-3. Return output in English as a single list of all the entities and relationships identified in steps 1 and 2. Use **{record_delimiter}** as the list delimiter.
- 
-4. When finished, output {completion_delimiter}
- 
-######################
+Format each relationship as ("relationship"{tuple_delimiter}<source_entity>{tuple_delimiter}<target_entity>{tuple_delimiter}<relationship_description>{tuple_delimiter}<relationship_strength>)
+
+3. Return output in 繁體中文 as a single list of all the entities and relationships identified in steps 1 and 2. Use {record_delimiter} as the list delimiter.
+
+4. If you have to translate into 繁體中文, just translate the descriptions, nothing else!
+
+5. When finished, output {completion_delimiter}.
+
 -Examples-
 ######################
+
 Example 1:
-Entity_types: ORGANIZATION,PERSON
-Text:
-The Verdantis's Central Institution is scheduled to meet on Monday and Thursday, with the institution planning to release its latest policy decision on Thursday at 1:30 p.m. PDT, followed by a press conference where Central Institution Chair Martin Smith will take questions. Investors expect the Market Strategy Committee to hold its benchmark interest rate steady in a range of 3.5%-3.75%.
-######################
-Output:
-("entity"{tuple_delimiter}CENTRAL INSTITUTION{tuple_delimiter}ORGANIZATION{tuple_delimiter}The Central Institution is the Federal Reserve of Verdantis, which is setting interest rates on Monday and Thursday)
-{record_delimiter}
-("entity"{tuple_delimiter}MARTIN SMITH{tuple_delimiter}PERSON{tuple_delimiter}Martin Smith is the chair of the Central Institution)
-{record_delimiter}
-("entity"{tuple_delimiter}MARKET STRATEGY COMMITTEE{tuple_delimiter}ORGANIZATION{tuple_delimiter}The Central Institution committee makes key decisions about interest rates and the growth of Verdantis's money supply)
-{record_delimiter}
-("relationship"{tuple_delimiter}MARTIN SMITH{tuple_delimiter}CENTRAL INSTITUTION{tuple_delimiter}Martin Smith is the Chair of the Central Institution and will answer questions at a press conference{tuple_delimiter}9)
-{completion_delimiter}
 
-######################
+text:
+錄取者，得進入本所博士班修讀博士學位。
+僑生及港澳學生依「海外聯合招生辦法」申請入學，經本所審核通過錄取者，得進入本所博士班修讀博士學位。
+大陸地區學生依「大陸地區人民來臺就讀專科以上學校辦法」申請入學，經本所審核通過錄取者，得進入本所博士班修讀博士學位。
+
+二、修業年限
+一
+------------------------
+output:
+("entity"{tuple_delimiter}本所{tuple_delimiter}ORGANIZATION{tuple_delimiter}本所是提供博士班課程的機構，負責審核並錄取申請者進入博士班修讀博士學位)
+{record_delimiter}
+("entity"{tuple_delimiter}僑生及港澳學生{tuple_delimiter}GROUP{tuple_delimiter}僑生及港澳學生是根據「海外聯合招生辦法」申請入學的學生群體)
+{record_delimiter}
+("entity"{tuple_delimiter}大陸地區學生{tuple_delimiter}GROUP{tuple_delimiter}大陸地區學生是根據「大陸地區人民來臺就讀專科以上學校辦法」申請入學的學生群體)
+{record_delimiter}
+("entity"{tuple_delimiter}海外聯合招生辦法{tuple_delimiter}REGULATION{tuple_delimiter}「海外聯合招生辦法」是規範僑生及港澳學生申請入學的辦法)
+{record_delimiter}
+("entity"{tuple_delimiter}大陸地區人民來臺就讀專科以上學校辦法{tuple_delimiter}REGULATION{tuple_delimiter}「大陸地區人民來臺就讀專科以上學校辦法」是規範大陸地區學生申請入學的辦法)
+{record_delimiter}
+("relationship"{tuple_delimiter}本所{tuple_delimiter}僑生及港澳學生{tuple_delimiter}本所審核並錄取僑生及港澳學生進入博士班{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}本所{tuple_delimiter}大陸地區學生{tuple_delimiter}本所審核並錄取大陸地區學生進入博士班{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}僑生及港澳學生{tuple_delimiter}海外聯合招生辦法{tuple_delimiter}僑生及港澳學生依據「海外聯合招生辦法」申請入學{tuple_delimiter}7)
+{record_delimiter}
+("relationship"{tuple_delimiter}大陸地區學生{tuple_delimiter}大陸地區人民來臺就讀專科以上學校辦法{tuple_delimiter}大陸地區學生依據「大陸地區人民來臺就讀專科以上學校辦法」申請入學{tuple_delimiter}7)
+{completion_delimiter}
+#############################
+
+
 Example 2:
-Entity_types: ORGANIZATION
-Text:
-TechGlobal's (TG) stock skyrocketed in its opening day on the Global Exchange Thursday. But IPO experts warn that the semiconductor corporation's debut on the public markets isn't indicative of how other newly listed companies may perform.
 
-TechGlobal, a formerly public company, was taken private by Vision Holdings in 2014. The well-established chip designer says it powers 85% of premium smartphones.
-######################
-Output:
-("entity"{tuple_delimiter}TECHGLOBAL{tuple_delimiter}ORGANIZATION{tuple_delimiter}TechGlobal is a stock now listed on the Global Exchange which powers 85% of premium smartphones)
+text:
+位。
+大陸地區學生依「大陸地區人民來臺就讀專科以上學校辦法」申請入學，經本所審核通過錄取者，得進入本所碩士班修讀碩士學位。
+
+二、修業年限
+至少一年，最多四年，但在職研究生得延長修業年限一年。
+
+三、修讀課程及學分
+除校定必修課程、「書報討論」二學分及「論文研究」之外，必須修滿本所認可之課程二十四
+------------------------
+output:
+("entity"{tuple_delimiter}大陸地區學生{tuple_delimiter}PERSON{tuple_delimiter}大陸地區的學生根據「大陸地區人民來臺就讀專科以上學校辦法」申請入學{tuple_delimiter}大陸地區的學生根據「大陸地區人民來臺就讀專科以上學校辦法」申請入學)
 {record_delimiter}
-("entity"{tuple_delimiter}VISION HOLDINGS{tuple_delimiter}ORGANIZATION{tuple_delimiter}Vision Holdings is a firm that previously owned TechGlobal)
+("entity"{tuple_delimiter}本所{tuple_delimiter}ORGANIZATION{tuple_delimiter}本所是指提供碩士班課程的教育機構，負責審核大陸地區學生的入學申請{tuple_delimiter}本所是指提供碩士班課程的教育機構，負責審核大陸地區學生的入學申請)
 {record_delimiter}
-("relationship"{tuple_delimiter}TECHGLOBAL{tuple_delimiter}VISION HOLDINGS{tuple_delimiter}Vision Holdings formerly owned TechGlobal from 2014 until present{tuple_delimiter}5)
+("entity"{tuple_delimiter}碩士班{tuple_delimiter}PROGRAM{tuple_delimiter}碩士班是本所提供的研究生課程，學生可以在此修讀碩士學位{tuple_delimiter}碩士班是本所提供的研究生課程，學生可以在此修讀碩士學位)
+{record_delimiter}
+("entity"{tuple_delimiter}大陸地區人民來臺就讀專科以上學校辦法{tuple_delimiter}REGULATION{tuple_delimiter}這是一項規定，允許大陸地區的學生申請來臺灣的專科以上學校就讀{tuple_delimiter}這是一項規定，允許大陸地區的學生申請來臺灣的專科以上學校就讀)
+{record_delimiter}
+("relationship"{tuple_delimiter}大陸地區學生{tuple_delimiter}本所{tuple_delimiter}大陸地區學生經本所審核通過後可以進入碩士班修讀{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}大陸地區學生{tuple_delimiter}大陸地區人民來臺就讀專科以上學校辦法{tuple_delimiter}大陸地區學生依據此辦法申請入學{tuple_delimiter}9)
+{record_delimiter}
+("relationship"{tuple_delimiter}本所{tuple_delimiter}碩士班{tuple_delimiter}本所提供碩士班課程供學生修讀{tuple_delimiter}7)
 {completion_delimiter}
+#############################
 
-######################
+
 Example 3:
-Entity_types: ORGANIZATION,GEO,PERSON
-Text:
-Five Aurelians jailed for 8 years in Firuzabad and widely regarded as hostages are on their way home to Aurelia.
 
-The swap orchestrated by Quintara was finalized when $8bn of Firuzi funds were transferred to financial institutions in Krohaara, the capital of Quintara.
+text:
+檢附成績證明正本）。
 
-The exchange initiated in Firuzabad's capital, Tiruzia, led to the four men and one woman, who are also Firuzi nationals, boarding a chartered flight to Krohaara.
+通過全民英語能力檢定中高級（含）以上之初試及複試。
 
-They were welcomed by senior Aurelian officials and are now on their way to Aurelia's capital, Cashion.
+曾在英語系國家修得學士 (含) 以上學位。
 
-The Aurelians include 39-year-old businessman Samuel Namara, who has been held in Tiruzia's Alhamia Prison, as well as journalist Durke Bataglani, 59, and environmentalist Meggie Tazbah, 53, who also holds Bratinas nationality.
-######################
-Output:
-("entity"{tuple_delimiter}FIRUZABAD{tuple_delimiter}GEO{tuple_delimiter}Firuzabad held Aurelians as hostages)
+修習本校或他校經所長認可之科技英文、寫作、聽講、閱讀類英文課程達6學分，且成績均達百分制70分或等級制B-。
+
+
+------------------------
+output:
+("entity"{tuple_delimiter}全民英語能力檢定{tuple_delimiter}考試{tuple_delimiter}全民英語能力檢定是一項評估英語能力的考試，分為初試及複試，要求中高級（含）以上的成績)
 {record_delimiter}
-("entity"{tuple_delimiter}AURELIA{tuple_delimiter}GEO{tuple_delimiter}Country seeking to release hostages)
+("entity"{tuple_delimiter}英語系國家{tuple_delimiter}地理{tuple_delimiter}英語系國家是指以英語為主要語言的國家，通常是指英語為官方語言或主要語言的國家)
 {record_delimiter}
-("entity"{tuple_delimiter}QUINTARA{tuple_delimiter}GEO{tuple_delimiter}Country that negotiated a swap of money in exchange for hostages)
+("entity"{tuple_delimiter}學士學位{tuple_delimiter}學位{tuple_delimiter}學士學位是高等教育的學位之一，通常需要在大學完成特定課程後授予)
 {record_delimiter}
+("entity"{tuple_delimiter}科技英文課程{tuple_delimiter}課程{tuple_delimiter}科技英文課程是專注於科技領域的英語學習課程，涵蓋寫作、聽講、閱讀等方面)
 {record_delimiter}
-("entity"{tuple_delimiter}TIRUZIA{tuple_delimiter}GEO{tuple_delimiter}Capital of Firuzabad where the Aurelians were being held)
+("entity"{tuple_delimiter}本校{tuple_delimiter}機構{tuple_delimiter}本校指的是提供相關課程的教育機構，可能是大學或其他高等教育機構)
 {record_delimiter}
-("entity"{tuple_delimiter}KROHAARA{tuple_delimiter}GEO{tuple_delimiter}Capital city in Quintara)
+("entity"{tuple_delimiter}他校{tuple_delimiter}機構{tuple_delimiter}他校指的是除本校以外的其他教育機構，可能是大學或其他高等教育機構)
 {record_delimiter}
-("entity"{tuple_delimiter}CASHION{tuple_delimiter}GEO{tuple_delimiter}Capital city in Aurelia)
+("entity"{tuple_delimiter}所長{tuple_delimiter}職位{tuple_delimiter}所長是指在教育機構中負責特定學術或行政部門的主管)
 {record_delimiter}
-("entity"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}PERSON{tuple_delimiter}Aurelian who spent time in Tiruzia's Alhamia Prison)
+("relationship"{tuple_delimiter}全民英語能力檢定{tuple_delimiter}英語系國家{tuple_delimiter}在英語系國家修得學位的人可能需要通過全民英語能力檢定以證明其英語能力{tuple_delimiter}5)
 {record_delimiter}
-("entity"{tuple_delimiter}ALHAMIA PRISON{tuple_delimiter}GEO{tuple_delimiter}Prison in Tiruzia)
+("relationship"{tuple_delimiter}科技英文課程{tuple_delimiter}本校{tuple_delimiter}本校提供科技英文課程以供學生修習{tuple_delimiter}7)
 {record_delimiter}
-("entity"{tuple_delimiter}DURKE BATAGLANI{tuple_delimiter}PERSON{tuple_delimiter}Aurelian journalist who was held hostage)
+("relationship"{tuple_delimiter}科技英文課程{tuple_delimiter}他校{tuple_delimiter}他校也可能提供科技英文課程以供學生修習{tuple_delimiter}6)
 {record_delimiter}
-("entity"{tuple_delimiter}MEGGIE TAZBAH{tuple_delimiter}PERSON{tuple_delimiter}Bratinas national and environmentalist who was held hostage)
-{record_delimiter}
-("relationship"{tuple_delimiter}FIRUZABAD{tuple_delimiter}AURELIA{tuple_delimiter}Firuzabad negotiated a hostage exchange with Aurelia{tuple_delimiter}2)
-{record_delimiter}
-("relationship"{tuple_delimiter}QUINTARA{tuple_delimiter}AURELIA{tuple_delimiter}Quintara brokered the hostage exchange between Firuzabad and Aurelia{tuple_delimiter}2)
-{record_delimiter}
-("relationship"{tuple_delimiter}QUINTARA{tuple_delimiter}FIRUZABAD{tuple_delimiter}Quintara brokered the hostage exchange between Firuzabad and Aurelia{tuple_delimiter}2)
-{record_delimiter}
-("relationship"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}ALHAMIA PRISON{tuple_delimiter}Samuel Namara was a prisoner at Alhamia prison{tuple_delimiter}8)
-{record_delimiter}
-("relationship"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}MEGGIE TAZBAH{tuple_delimiter}Samuel Namara and Meggie Tazbah were exchanged in the same hostage release{tuple_delimiter}2)
-{record_delimiter}
-("relationship"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}DURKE BATAGLANI{tuple_delimiter}Samuel Namara and Durke Bataglani were exchanged in the same hostage release{tuple_delimiter}2)
-{record_delimiter}
-("relationship"{tuple_delimiter}MEGGIE TAZBAH{tuple_delimiter}DURKE BATAGLANI{tuple_delimiter}Meggie Tazbah and Durke Bataglani were exchanged in the same hostage release{tuple_delimiter}2)
-{record_delimiter}
-("relationship"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}FIRUZABAD{tuple_delimiter}Samuel Namara was a hostage in Firuzabad{tuple_delimiter}2)
-{record_delimiter}
-("relationship"{tuple_delimiter}MEGGIE TAZBAH{tuple_delimiter}FIRUZABAD{tuple_delimiter}Meggie Tazbah was a hostage in Firuzabad{tuple_delimiter}2)
-{record_delimiter}
-("relationship"{tuple_delimiter}DURKE BATAGLANI{tuple_delimiter}FIRUZABAD{tuple_delimiter}Durke Bataglani was a hostage in Firuzabad{tuple_delimiter}2)
+("relationship"{tuple_delimiter}所長{tuple_delimiter}科技英文課程{tuple_delimiter}所長負責認可科技英文課程的學分{tuple_delimiter}8)
 {completion_delimiter}
+#############################
 
-######################
+
+
 -Real Data-
 ######################
-Entity_types: {entity_types}
-Text: {input_text}
+text: {input_text}
 ######################
-Output:
+output:
